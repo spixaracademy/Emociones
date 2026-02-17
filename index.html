@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>El Corazón de Pixi — Emociones</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body>
+  <div class="app">
+    <header class="top">
+      <h1>💗 El Corazón de Pixi</h1>
+    </header>
+
+    <main class="stage">
+      <!-- TARJETA PIXI -->
+      <section class="card pixiCard" id="dropZone" aria-label="Pixi">
+        <div class="pixiGlow"></div>
+
+        <div class="pixiWrap">
+          <img id="pixiImg" alt="Pixi" src="assets/pixi_normal.png"/>
+        </div>
+
+        <div class="pixiFooter">
+          <div class="pixiLabel" id="question">¿Cómo se siente Pixi?</div>
+          
+        </div>
+      </section>
+
+      <!-- OPCIONES -->
+      <section class="card optionsCard" aria-label="Opciones">
+        <div class="optionsHeader">
+          <div class="hint">Arrastra una emoción hacia Pixi o toca una opción.</div>
+          <div class="miniProgress" id="progress">0 / 5</div>
+        </div>
+
+        <div class="options" id="options"></div>
+
+        
+      </section>
+    </main>
+
+    <!-- FEEDBACK OVERLAY -->
+    <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true">
+      <div class="overlayCard">
+        <div class="overlayTop">
+          <img id="feedbackImg" class="feedbackImg" alt="Pixi feedback"/>
+          <div class="overlayText">
+            <div class="overlayTitle" id="overlayTitle">¡Bien!</div>
+            <div class="overlayMsg" id="overlayMsg">Así se siente Pixi.</div>
+          </div>
+        </div>
+
+        <div class="overlayActions">
+          <button id="nextBtn" class="btn primary">Continuar</button>
+          <button id="retryBtn" class="btn ghost">Intentar de nuevo</button>
+        </div>
+
+        <div class="overlaySmall" id="overlaySmall">✨ + Chispas</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
