@@ -1,351 +1,329 @@
-:root{
-  --bgA:#2a0a4d;
-  --bgB:#12001f;
+:root {
+  /* ==========================================================
+     🕹️ CONTROLES DE POSICIÓN Y TAMAÑO DE PIXI
+     Ajusta estos porcentajes para ubicar a Pixi sobre la base
+     ========================================================== */
+  --pixi-x: 31%;       /* Izquierda a derecha (0% a 100%) */
+  --pixi-y: 62%;       /* Arriba a abajo (0% a 100%) */
+  --pixi-size: 22%;    /* Tamaño de Pixi respecto al ancho de pantalla */
 
-  --glass: rgba(255,255,255,.08);
-  --stroke: rgba(255,255,255,.16);
-
-  --violet:#7b4dff;
-  --pink:#ff6fae;
-  --purple:#3b0a6f;
-
-  --text: rgba(255,255,255,.95);
-  --muted: rgba(255,255,255,.72);
-
-  --shadow: 0 28px 90px rgba(0,0,0,.55);
+  /* Colores y estilos */
+  --glass: rgba(255, 255, 255, 0.08);
+  --stroke: rgba(255, 255, 255, 0.16);
+  --violet: #7b4dff;
+  --pink: #ff6fae;
+  --text: rgba(255, 255, 255, 0.95);
+  --muted: rgba(255, 255, 255, 0.72);
+  --shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 
-body{
-  margin:0;
+body {
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   color: var(--text);
-  background:
-    radial-gradient(700px 500px at 50% 28%, rgba(255,111,174,.20), transparent 62%),
-    radial-gradient(900px 650px at 50% 78%, rgba(123,77,255,.33), transparent 65%),
-    radial-gradient(900px 650px at 10% 10%, rgba(123,77,255,.15), transparent 60%),
-    linear-gradient(180deg, var(--bgA), var(--bgB));
+  background-color: #0d001a; /* Color de fondo base por si la imagen tarda en cargar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.app{
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 30px 16px 40px;
+/* ========== ESCENARIO 16:9 ========== */
+.app-scene {
+  position: relative;
+  width: 100%;
+  max-width: 1280px; /* Tamaño máximo en pantallas grandes */
+  aspect-ratio: 16 / 9; /* Fuerza la relación de aspecto */
+  
+  /* 🔧 COLOCA AQUÍ TU IMAGEN DE FONDO */
+  background-image: url('assets/fondo.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
 }
 
-.top{
-  text-align:center;
-  margin-bottom: 22px;
+/* ========== TÍTULO FLOTANTE ========== */
+.top-floating {
+  position: absolute;
+  top: 4%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.top h1{
-  margin: 0 0 6px;
-  font-size: 42px;
-  letter-spacing: .3px;
-  text-shadow: 0 18px 60px rgba(0,0,0,.55);
+.top-floating h1 {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 42px);
+  text-shadow: 0 4px 15px rgba(0,0,0,0.8);
 }
 
-.top p{
-  margin:0;
-  color: var(--muted);
-  font-size: 16px;
+/* ========== PIXI Y SU ZONA ========== */
+.pixi-container {
+  position: absolute;
+  /* Aquí aplicamos tus variables de posición */
+  left: var(--pixi-x);
+  top: var(--pixi-y);
+  width: var(--pixi-size);
+  
+  /* Esto centra a Pixi exactamente en las coordenadas, no desde su esquina */
+  transform: translate(-50%, -50%); 
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
 }
 
-.stage{
-  display:grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 18px;
-  align-items: stretch;
+#pixiImg {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+  animation: floaty 2.8s ease-in-out infinite;
 }
 
-@media (max-width: 980px){
-  .stage{grid-template-columns:1fr}
-  .top h1{font-size:34px}
+.pixiGlow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, rgba(123,77,255,0.4), transparent 60%);
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
 }
 
-.card{
-  position:relative;
-  border-radius: 26px;
+.pixiName {
+  margin-top: 10px;
+  font-weight: 900;
+  font-size: clamp(12px, 1.5vw, 18px);
+  letter-spacing: 0.8px;
+  background: rgba(0,0,0,0.5);
+  padding: 4px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ========== PANEL DE OPCIONES ========== */
+.card {
   background: var(--glass);
   border: 1px solid var(--stroke);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
-  overflow:hidden;
+  border-radius: 26px;
 }
 
-/* ========== PIXI CARD ========== */
-.pixiCard{
-  min-height: 520px;
-  padding: 22px 22px 16px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.pixiGlow{
-  position:absolute;
-  inset:-40px;
-  background:
-    radial-gradient(circle at 45% 40%, rgba(255,111,174,.22), transparent 55%),
-    radial-gradient(circle at 60% 70%, rgba(123,77,255,.22), transparent 60%);
-  filter: blur(18px);
-  pointer-events:none;
-}
-
-.pixiWrap{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 20px 10px;
-}
-
-.pixiWrap img{
-  width: min(420px, 92%);
-  max-width: 520px;
-  height:auto;
-  object-fit:contain;
-  filter: drop-shadow(0 26px 60px rgba(0,0,0,.55));
-  animation: floaty 2.8s ease-in-out infinite;
-}
-
-@keyframes floaty{
-  0%,100%{ transform: translateY(0); }
-  50%{ transform: translateY(-8px); }
-}
-
-.pixiFooter{
-  text-align:center;
-  padding-top: 10px;
-}
-
-.pixiLabel{
-  font-weight: 800;
-  color: var(--muted);
-  letter-spacing: .2px;
-}
-
-.pixiName{
-  margin-top: 8px;
-  font-weight: 1000;
-  font-size: 20px;
-  letter-spacing: .8px;
-}
-
-/* ========== OPTIONS ========== */
-.optionsCard{
+.optionsCard {
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42%; /* Ocupa un poco menos de la mitad derecha */
+  max-height: 85%;
   padding: 18px;
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
+  z-index: 10;
+  overflow-y: auto;
 }
 
-.optionsHeader{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.optionsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.hint{
+.hint {
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
 }
 
-.miniProgress{
+.miniProgress {
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(0,0,0,.20);
-  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.14);
   font-weight: 900;
   font-size: 12px;
 }
 
-.options{
-  display:grid;
-  gap: 12px;
-  padding-top: 6px;
+.options {
+  display: grid;
+  gap: 10px;
 }
 
-.option{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-
-  padding: 16px 16px;
+  padding: 12px 16px;
   border-radius: 18px;
-
-  background: linear-gradient(135deg, rgba(123,77,255,.30), rgba(255,111,174,.18));
-  border: 1px solid rgba(255,255,255,.18);
-
+  background: linear-gradient(135deg, rgba(123,77,255,0.2), rgba(255,111,174,0.1));
+  border: 1px solid rgba(255,255,255,0.15);
   cursor: grab;
-  user-select:none;
-
-  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+  user-select: none;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
 }
 
-.option:hover{
+.option:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 60px rgba(0,0,0,.35), 0 0 28px rgba(255,111,174,.18);
-  border-color: rgba(255,111,174,.35);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 15px rgba(255,111,174,0.18);
+  border-color: rgba(255,111,174,0.35);
 }
 
-.option:active{
+.option:active {
   transform: translateY(1px);
   cursor: grabbing;
 }
 
-.optLeft{
-  display:flex;
-  align-items:center;
+.optLeft {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  min-width: 0;
 }
 
-.badge{
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
-  display:grid;
-  place-items:center;
-
-  background: rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.14);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
-  font-size: 18px;
-}
-
-.optName{
-  font-weight: 1000;
-  letter-spacing: .6px;
+.badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.14);
   font-size: 16px;
-  white-space: nowrap;
-  overflow:hidden;
-  text-overflow: ellipsis;
 }
 
-.optRight{
+.optName {
   font-weight: 900;
-  font-size: 12px;
-  color: rgba(255,255,255,.82);
-  opacity: .85;
+  letter-spacing: 0.6px;
+  font-size: 14px;
 }
 
-.option.correct{
-  border-color: rgba(1,241,93,.55);
-  box-shadow: 0 0 38px rgba(1,241,93,.20);
+.optRight {
+  font-weight: 900;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
 }
 
-.option.wrong{
-  border-color: rgba(255,111,174,.60);
-  box-shadow: 0 0 38px rgba(255,111,174,.22);
+.option.correct {
+  border-color: rgba(1,241,93,0.55);
+  box-shadow: 0 0 25px rgba(1,241,93,0.20);
 }
 
-.footNote{
-  margin-top:auto;
-  text-align:center;
-  color: var(--muted);
-  font-size: 12px;
-  padding-top: 6px;
+.option.wrong {
+  border-color: rgba(255,111,174,0.60);
+  box-shadow: 0 0 25px rgba(255,111,174,0.22);
 }
 
 /* ========== OVERLAY ========== */
-.overlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: rgba(0,0,0,.55);
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.65);
   padding: 20px;
-
+  z-index: 100;
   opacity: 1;
   visibility: visible;
-  pointer-events:auto;
-  transition: opacity .18s ease, visibility .18s ease, transform .18s ease;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
 }
 
-.overlay.hidden{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transform: scale(.985);
+.overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.overlayCard{
-  width: min(560px, 96%);
+.overlayCard {
+  width: min(500px, 90%);
   border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.45));
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: 0 34px 110px rgba(0,0,0,.75);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.6));
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 34px 110px rgba(0,0,0,0.75);
   backdrop-filter: blur(12px);
-  padding: 18px;
+  padding: 24px;
 }
 
-.overlayTop{
-  display:flex;
-  gap: 14px;
-  align-items:center;
+.overlayTop {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
-.feedbackImg{
-  width: 140px;
-  height:auto;
-  filter: drop-shadow(0 18px 40px rgba(0,0,0,.55));
+.feedbackImg {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,0.55));
 }
 
-.overlayTitle{
-  font-weight: 1000;
-  font-size: 22px;
-  letter-spacing: .3px;
-}
+.overlayTitle { font-weight: 1000; font-size: 22px; }
+.overlayMsg { margin-top: 6px; color: var(--muted); font-weight: 800; }
 
-.overlayMsg{
-  margin-top: 6px;
-  color: var(--muted);
-  font-weight: 800;
-}
-
-.overlayActions{
-  display:flex;
+.overlayActions {
+  display: flex;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
-.btn{
-  border:none;
-  border-radius: 18px;
+.btn {
+  border: none;
+  border-radius: 14px;
   padding: 12px 14px;
   font-weight: 1000;
-  cursor:pointer;
-  flex:1;
-  transition: transform .12s ease, filter .12s ease;
+  cursor: pointer;
+  flex: 1;
+  transition: transform 0.12s ease, filter 0.12s ease;
 }
 
-.btn:active{ transform: translateY(1px); }
+.btn:active { transform: translateY(1px); }
 
-.btn.primary{
-  background: linear-gradient(90deg, rgba(123,77,255,.95), rgba(255,111,174,.90));
+.btn.primary {
+  background: linear-gradient(90deg, var(--violet), var(--pink));
   color: white;
-  box-shadow: 0 18px 50px rgba(255,111,174,.18);
+  box-shadow: 0 10px 20px rgba(255,111,174,0.2);
+}
+.btn.primary:hover { filter: saturate(1.2); }
+
+.btn.ghost {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.88);
 }
 
-.btn.primary:hover{ filter: saturate(1.06); }
+.overlaySmall { margin-top: 12px; text-align: center; color: rgba(255,255,255,0.6); font-weight: 900; font-size: 13px;}
 
-.btn.ghost{
-  background: rgba(0,0,0,.25);
-  border: 1px solid rgba(255,255,255,.18);
-  color: rgba(255,255,255,.88);
-}
-
-.overlaySmall{
-  margin-top: 12px;
-  text-align:center;
-  color: rgba(255,255,255,.82);
-  font-weight: 900;
-  opacity: .9;
+/* Adaptación a pantallas verticales (Móviles) */
+@media (max-aspect-ratio: 1/1) {
+  .app-scene {
+    aspect-ratio: auto;
+    height: 100%;
+    background-position: center left;
+  }
+  .pixi-container {
+    --pixi-y: 35%; /* Sube a Pixi en móviles */
+    --pixi-size: 45%; 
+  }
+  .optionsCard {
+    width: 90%;
+    right: 5%;
+    top: auto;
+    bottom: 5%;
+    transform: none;
+  }
 }
